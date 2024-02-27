@@ -11,7 +11,41 @@ services:
     volumes:
       - vprodbdata:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=value
+      - MYSQL_ROOT_PASSWORD=vprofilepass
       - MYSQL_DATABASE=vprodbpass
-  db:
-    image: "redis:alpine"
+
+  vprocache01:
+    image: memcached
+    ports:
+      - "11211:11211"
+  
+  vpromq01:
+    image: rabbitmq
+    ports:
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  vproapp:
+    build: 
+      context: ./Docker-files/app
+    image: mynt208/vprofileapp
+    container_name: vproapp
+    ports:
+      - "8080:8080"
+    volumes:
+      - vproappdata:/usr/local/tomcat/webapps
+
+  vproweb:
+    build: 
+      context: ./Docker-files/web
+    image: mynt208/vprofileweb
+    container_name: vproweb
+    ports:
+      - "80:80"
+
+volumes:
+  vprodbdata: {}
+  vproappdata: {}
+

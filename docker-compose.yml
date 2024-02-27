@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  vprodb:
+    build: 
+      context: ./Docker-files/db
+    image: mynt208/vprofile
+    container_name: vprodb
+    ports:
+      - "3306:3306"
+    volumes:
+      - vprodbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=value
+      - MYSQL_DATABASE=vprodbpass
+  db:
+    image: "redis:alpine"
